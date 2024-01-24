@@ -37,7 +37,7 @@ func CreateHTTPClientWProxy(proxy string) (*http.Client, error) {
 	return client, nil
 }
 
-func ProcessSingleTarget(client *http.Client, url string) {
+func ProcessSingleTarget(client *http.Client, url, cookie, header string) {
 	fmt.Printf("Sending request to URL: %s\n", url)
 
 	var wg sync.WaitGroup
@@ -45,27 +45,27 @@ func ProcessSingleTarget(client *http.Client, url string) {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		bypassFound += module.HttpRequestWithVerbs(client, url)
+		bypassFound += module.HttpRequestWithVerbs(client, url, cookie, header)
 	}()
 
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		bypassFound += module.HttpRequestWithHeaders(client, url)
+		bypassFound += module.HttpRequestWithHeaders(client, url, cookie, header)
 	}()
 
 	if utils.HasPath(url) {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			bypassFound += module.HttpRequestPathFuzzing(client, url)
+			bypassFound += module.HttpRequestPathFuzzing(client, url, cookie, header)
 		}()
 	}
 
 	wg.Wait()
 }
 
-func ProcessMultipleTargets(client *http.Client, file string) {
+func ProcessMultipleTargets(client *http.Client, file, cookie, header string) {
 	fmt.Printf("Processing targets from file: %s\n", file)
 
 	entries, err := utils.ReadTargetsFromFile(file)
@@ -80,7 +80,7 @@ func ProcessMultipleTargets(client *http.Client, file string) {
 		wg.Add(1)
 		go func(url string) {
 			defer wg.Done()
-			ProcessSingleTarget(client, url)
+			ProcessSingleTarget(client, url, cookie, header)
 		}(url)
 	}
 

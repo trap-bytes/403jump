@@ -9,7 +9,7 @@ import (
 	"github.com/trap-bytes/403jump/utils"
 )
 
-func HttpRequestPathFuzzing(client *http.Client, inputURL string) int {
+func HttpRequestPathFuzzing(client *http.Client, inputURL, cookie, customHeader string) int {
 	bypass := 0
 
 	parsedURL, err := url.Parse(inputURL)
@@ -26,6 +26,19 @@ func HttpRequestPathFuzzing(client *http.Client, inputURL string) int {
 		if err != nil {
 			fmt.Printf("Error creating request for %s with %s path: %v\n", inputURL, path, err)
 			return 0
+		}
+
+		if cookie != "" {
+			req.Header.Set("Cookie", cookie)
+		}
+
+		if customHeader != "" {
+			headerParts := strings.SplitN(customHeader, ":", 2)
+			if len(headerParts) == 2 {
+				req.Header.Add(strings.TrimSpace(headerParts[0]), strings.TrimSpace(headerParts[1]))
+			} else {
+				fmt.Printf("Invalid header format: %s\n", customHeader)
+			}
 		}
 
 		resp, err := client.Do(req)

@@ -23,7 +23,7 @@ var Headers = [13]string{
 	"Host: localhost",
 }
 
-func HttpRequestWithHeaders(client *http.Client, url string) int {
+func HttpRequestWithHeaders(client *http.Client, url, cookie, customHeader string) int {
 	bypass := 0
 
 	for _, header := range Headers {
@@ -36,6 +36,19 @@ func HttpRequestWithHeaders(client *http.Client, url string) int {
 		parts := strings.SplitN(header, ": ", 2)
 		if len(parts) == 2 {
 			req.Header.Add(parts[0], parts[1])
+		}
+
+		if cookie != "" {
+			req.Header.Set("Cookie", cookie)
+		}
+
+		if customHeader != "" {
+			headerParts := strings.SplitN(customHeader, ":", 2)
+			if len(headerParts) == 2 {
+				req.Header.Add(strings.TrimSpace(headerParts[0]), strings.TrimSpace(headerParts[1]))
+			} else {
+				fmt.Printf("Invalid header format: %s\n", header)
+			}
 		}
 
 		resp, err := client.Do(req)

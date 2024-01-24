@@ -16,11 +16,15 @@ func main() {
 	var urlFlag string
 	var fileFlag string
 	var proxy string
+	var cookie string
+	var header string
 	var client *http.Client
 
 	flag.StringVar(&urlFlag, "t", "", "Specify the target URL (e.g., domain.com or https://domain.com)")
 	flag.StringVar(&fileFlag, "f", "", "Specify the file containing target URLs (e.g., domains.txt)")
 	flag.StringVar(&proxy, "p", "", "Specify the proxy URL (e.g., 127.0.0.1:8080)")
+	flag.StringVar(&cookie, "c", "", "Specify cookies (e.g., user_token=g3p21ip21h; )")
+	flag.StringVar(&header, "r", "", "Specify headers (e.g., Myheader: test )")
 
 	helpFlag := flag.Bool("h", false, "Display help")
 
@@ -31,15 +35,20 @@ func main() {
 		fmt.Println("\nUsage:")
 		fmt.Printf("  %s <command> [arguments]\n", os.Args[0])
 		fmt.Println("\nThe arguments are:")
+		fmt.Println("  -t string    Specify the target URL (e.g., domain.com or https://domain.com)")
 		fmt.Println("  -f string    Specify the file (e.g., domain.txt)")
 		fmt.Println("  -p string    Specify the proxy URL (e.g., 127.0.0.1:8080)")
-		fmt.Println("  -t string    Specify the target URL (e.g., domain.com or https://domain.com)")
+		fmt.Println("  -c string    Specify cookies (e.g., user_token=g3p21ip21h; ")
+		fmt.Println("  -r string    Specify headers (e.g., Myheader: test")
 		fmt.Println("  -h           Display help")
 
 		fmt.Println("\nExamples:")
 		fmt.Printf("  %s -t domain.com\n", os.Args[0])
 		fmt.Printf("  %s -t https://domain.com -p 127.0.0.1:8080\n", os.Args[0])
 		fmt.Printf("  %s -f domains.txt\n", os.Args[0])
+		fmt.Printf("  %s -c \"user_token=hjljkklpo\"\n", os.Args[0])
+		fmt.Printf("  %s -r \"Myheader: test\"\n", os.Args[0])
+
 		return
 	}
 
@@ -73,10 +82,10 @@ func main() {
 			fmt.Printf("Error: %v", err)
 			return
 		} else {
-			ProcessSingleTarget(client, urlFlag)
+			ProcessSingleTarget(client, urlFlag, cookie, header)
 		}
 	} else {
-		ProcessMultipleTargets(client, fileFlag)
+		ProcessMultipleTargets(client, fileFlag, cookie, header)
 	}
 
 	if bypassFound > 0 {
