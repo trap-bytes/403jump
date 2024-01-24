@@ -89,7 +89,7 @@ func ReadTargetsFromFile(filename string) ([]string, error) {
 		}
 		validUrl, err := ValidateUrl(line)
 		if err != nil {
-			fmt.Printf("Error: %v\n", err)
+			fmt.Printf("Error: %v\n\n", err)
 		} else {
 			entries = append(entries, validUrl)
 		}
@@ -135,4 +135,19 @@ func IsValidProxy(input string) bool {
 		return false
 	}
 	return true
+}
+
+func PrintBanner() {
+	azureBold := "\033[1;36m"
+
+	fmt.Println(Colorize("  _  _    ___ ____      _                       ", azureBold))
+	fmt.Println(Colorize(" | || |  / _ \\___ \\    (_)                      ", azureBold))
+	fmt.Println(Colorize(" | || |_| | | |__) |    _ _   _ _ __ ___  _ __  ", azureBold))
+	fmt.Println(Colorize(" |__   _| | | |__ <    | | | | | '_ ` _ \\| '_ \\ ", azureBold))
+	fmt.Println(Colorize("    | | | |_| |__) |   | | |_| | | | | | | |_) |", azureBold))
+	fmt.Println(Colorize("    |_|  \\___/____/    | |\\__,_|_| |_| |_| .__/ ", azureBold))
+	fmt.Println(Colorize("                      _/ |               | |    ", azureBold))
+	fmt.Println(Colorize("                     |__/                |_|    ", azureBold))
+	fmt.Println("")
+	fmt.Print(Colorize("403JUMP - HTTP 403 Bypass Tool\n\n", azureBold))
 }

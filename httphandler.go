@@ -38,7 +38,9 @@ func CreateHTTPClientWProxy(proxy string) (*http.Client, error) {
 }
 
 func ProcessSingleTarget(client *http.Client, url, cookie, header string) {
-	fmt.Printf("Sending request to URL: %s\n", url)
+
+	str := "\033[1;97mSending request to URL: %s\033[0m\n\n"
+	fmt.Printf(str, url)
 
 	var wg sync.WaitGroup
 
@@ -66,7 +68,8 @@ func ProcessSingleTarget(client *http.Client, url, cookie, header string) {
 }
 
 func ProcessMultipleTargets(client *http.Client, file, cookie, header string) {
-	fmt.Printf("Processing targets from file: %s\n", file)
+	str := "\033[1;97mProcessing targets from file: %s\033[0m\n\n"
+	fmt.Printf(str, file)
 
 	entries, err := utils.ReadTargetsFromFile(file)
 	if err != nil {

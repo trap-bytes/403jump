@@ -13,6 +13,9 @@ import (
 var bypassFound int
 
 func main() {
+
+	utils.PrintBanner()
+
 	var urlFlag string
 	var fileFlag string
 	var proxy string
@@ -79,7 +82,7 @@ func main() {
 	if urlFlag != "" {
 		urlFlag, err := utils.ValidateUrl(urlFlag)
 		if err != nil {
-			fmt.Printf("Error: %v", err)
+			fmt.Printf("Error: %v\n\n", err)
 			return
 		} else {
 			ProcessSingleTarget(client, urlFlag, cookie, header)
@@ -89,12 +92,12 @@ func main() {
 	}
 
 	if bypassFound > 0 {
-		bypassMessage := fmt.Sprintf("Found %d possible bypass(es)\n", bypassFound)
-		coloredMessage := utils.Colorize(bypassMessage, "\033[32m") // Green color
+		bypassMessage := fmt.Sprintf("\nFound %d possible bypass(es)\n", bypassFound)
+		coloredMessage := utils.Colorize(bypassMessage, "\033[1;32m") // Green color
 		fmt.Print(coloredMessage)
 	} else {
-		noBypassMessage := "No bypass found\n"
-		coloredMessage := utils.Colorize(noBypassMessage, "\033[31m") // Red color
+		noBypassMessage := "\nNo bypass found\n"
+		coloredMessage := utils.Colorize(noBypassMessage, "\033[1;31m") // Red color
 		fmt.Print(coloredMessage)
 	}
 

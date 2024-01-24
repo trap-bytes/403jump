@@ -35,7 +35,7 @@ func HttpRequestWithVerbs(client *http.Client, url, cookie, customHeader string)
 
 		resp, err := client.Do(req)
 		if err != nil {
-			fmt.Printf("Error performing a %s request for %s: %v\n", verb, url, err)
+			fmt.Printf("Error performing request with %s method for %s: %v\n", verb, url, err)
 			return 0
 		}
 		defer resp.Body.Close()
