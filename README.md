@@ -5,7 +5,7 @@
 403JUMP is a tool designed for penetration testers and bug bounty hunters to audit the security of web applications by attempting to bypass HTTP 403 (Forbidden) pages. It automates the process of sending various HTTP requests and headers to identify potential security vulnerabilities.
 
 
-![403JUMP Image](https://github.com/trap-bytes/403jump/blob/main/static/tool.png)
+![403JUMP Image](https://raw.githubusercontent.com/trap-bytes/403jump/bd50f22b15d13670947ea732e1a14f7a33253106/static/tool.png)
 
 
 ## Features
