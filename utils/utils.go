@@ -130,8 +130,8 @@ func IsValidProxy(input string) bool {
 		return false
 	}
 
-	_, err := strconv.Atoi(portStr)
-	if err != nil {
+	port, err := strconv.Atoi(portStr)
+	if err != nil || port < 1 || port > 65535 {
 		return false
 	}
 	return true

@@ -35,7 +35,7 @@ func main() {
 	if *helpFlag {
 		fmt.Println("403jump is a tool for trying to bypass page protected by HTTP 403 status code.")
 		fmt.Println("\nUsage:")
-		fmt.Printf("  %s <command> [arguments]\n", os.Args[0])
+		fmt.Printf("  %s [arguments]\n", os.Args[0])
 		fmt.Println("\nThe arguments are:")
 		fmt.Println("  -t string    Specify the target URL (e.g., domain.com or https://domain.com)")
 		fmt.Println("  -f string    Specify the file (e.g., domain.txt)")
