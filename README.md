@@ -32,7 +32,7 @@ This will display help for the tool. Here are all the arguments it supports.
 
 ```
 Usage:
-  403jump <command> [arguments]
+  403jump [arguments]
 
 The arguments are:
   -t string    Specify the target URL (e.g., domain.com or https://domain.com)
