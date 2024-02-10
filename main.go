@@ -66,7 +66,7 @@ func main() {
 			fmt.Println("Using proxy:", proxy)
 			client, err = CreateHTTPClientWProxy(proxy)
 			if err != nil {
-				fmt.Printf("Error in creating HTTP client with proxy: %v\n", err)
+				fmt.Println(err)
 				return
 			}
 		} else {
