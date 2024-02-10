@@ -29,46 +29,21 @@ func ValidateUrl(inputURL string) (string, error) {
 		return "", fmt.Errorf("Error parsing URL: %v", err)
 	}
 
-	if u.Scheme != "" && u.Scheme != "http" && u.Scheme != "https" {
-		return "", fmt.Errorf("Invalid URL scheme for %s. Only 'http' and 'https' are allowed.", inputURL)
-	}
-
 	if u.Scheme == "" {
 		inputURL = "https://" + inputURL
+		u, _ = url.Parse(inputURL)
 	}
 
-	isValid, err := isValidURL(inputURL)
+	if u.Scheme != "http" && u.Scheme != "https" {
+		return "", errors.New("Invalid URL scheme")
+	}
+
+	_, err = net.LookupHost(u.Host)
 	if err != nil {
-		return "", fmt.Errorf("The provided URL %s is invalid: %v", inputURL, err)
-	}
-
-	if !isValid {
-		return "", fmt.Errorf("The provided URL %s is invalid.", inputURL)
+		return "", err
 	}
 
 	return inputURL, nil
-}
-
-func isValidURL(tocheck string) (bool, error) {
-
-	uri, err := url.ParseRequestURI(tocheck)
-	if err != nil {
-		return false, err
-	}
-
-	switch uri.Scheme {
-	case "http":
-	case "https":
-	default:
-		return false, errors.New("Invalid scheme")
-	}
-
-	_, err = net.LookupHost(uri.Host)
-	if err != nil {
-		return false, err
-	}
-
-	return true, nil
 }
 
 func ReadTargetsFromFile(filename string) ([]string, error) {
