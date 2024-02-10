@@ -19,8 +19,7 @@ func CreateHTTPClientWProxy(proxy string) (*http.Client, error) {
 	proxyPortStr := parts[1]
 	proxyPort, err := strconv.Atoi(proxyPortStr)
 	if err != nil {
-		fmt.Printf("Error converting proxy port to integer: %v\n", err)
-		proxyPort = 8080
+		return nil, fmt.Errorf("Error converting proxy port to integer: %v\n", err)
 	}
 
 	client := &http.Client{}
