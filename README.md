@@ -1,4 +1,4 @@
-# 403JUMP - HTTP 403 Bypass Tool
+# 403JUMP
 
 ## Overview
 
