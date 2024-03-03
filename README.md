@@ -40,6 +40,7 @@ The arguments are:
   -p string    Specify the proxy URL (e.g., 127.0.0.1:8080)
   -c string    Specify cookies (e.g., user_token=g3p21ip21h; 
   -r string    Specify headers (e.g., Myheader: test
+  -timeout     Specify connection timeout
   -h           Display help
 
 Examples:
