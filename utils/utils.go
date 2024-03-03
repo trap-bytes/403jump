@@ -40,7 +40,6 @@ func ValidateUrl(inputURL string) (string, error) {
 
 	host, port, err := net.SplitHostPort(u.Host)
 	if err != nil {
-		// Assume no port specified, proceed with the original host
 		host = u.Host
 	}
 
@@ -49,7 +48,6 @@ func ValidateUrl(inputURL string) (string, error) {
 		return "", err
 	}
 
-	// Reconstruct the URL with the correct host and port
 	if port != "" {
 		inputURL = fmt.Sprintf("%s://%s:%s%s", u.Scheme, host, port, u.RequestURI())
 	} else {
