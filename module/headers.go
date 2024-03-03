@@ -2,13 +2,14 @@ package module
 
 import (
 	"fmt"
+	"net"
 	"net/http"
 	"strings"
 
 	"github.com/trap-bytes/403jump/utils"
 )
 
-var Headers = [13]string{
+var Headers = [12]string{
 	"X-Originating-IP: 127.0.0.1",
 	"X-Forwarded-For: 127.0.0.1",
 	"X-Forwarded: 127.0.0.1",
@@ -23,10 +24,11 @@ var Headers = [13]string{
 	"Host: localhost",
 }
 
-func HttpRequestWithHeaders(client *http.Client, url, cookie, customHeader string) int {
-	bypass := 0
+func HttpRequestWithHeaders(client *http.Client, url, cookie, customHeader string) int64 {
+	bypass := int64(0)
 
 	for _, header := range Headers {
+
 		req, err := http.NewRequest("GET", url, nil)
 		if err != nil {
 			fmt.Printf("Error creating request for %s with %s header: %v\n", url, header, err)
@@ -53,18 +55,22 @@ func HttpRequestWithHeaders(client *http.Client, url, cookie, customHeader strin
 
 		resp, err := client.Do(req)
 		if err != nil {
-			fmt.Printf("Error performing request for %s with %s header: %v\n", url, header, err)
-			return 0
+			if netErr, ok := err.(net.Error); ok && netErr.Timeout() {
+				fmt.Printf("Timeout error: Request for %s with %s header took too long to complete.\n", url, header)
+				continue
+			} else {
+				fmt.Printf("Error performing request for %s with %s header: %v\n", url, header, err)
+				return 0
+			}
 		}
 		defer resp.Body.Close()
 
 		if resp.StatusCode < http.StatusBadRequest {
-			bypassMessage := fmt.Sprintf("Possible bypass found for %s with %s header. Status code: %d\n", url, header, resp.StatusCode)
+			bypassMessage := fmt.Sprintf("Possible bypass found for %s via %s header. Status code: %d\n", url, header, resp.StatusCode)
 			coloredMessage := utils.Colorize(bypassMessage, "\033[32m") // Green color
 			fmt.Print(coloredMessage)
 			bypass++
 		}
 	}
-
 	return bypass
 }

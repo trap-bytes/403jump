@@ -38,9 +38,22 @@ func ValidateUrl(inputURL string) (string, error) {
 		return "", errors.New("Invalid URL scheme")
 	}
 
-	_, err = net.LookupHost(u.Host)
+	host, port, err := net.SplitHostPort(u.Host)
+	if err != nil {
+		// Assume no port specified, proceed with the original host
+		host = u.Host
+	}
+
+	_, err = net.LookupHost(host)
 	if err != nil {
 		return "", err
+	}
+
+	// Reconstruct the URL with the correct host and port
+	if port != "" {
+		inputURL = fmt.Sprintf("%s://%s:%s%s", u.Scheme, host, port, u.RequestURI())
+	} else {
+		inputURL = fmt.Sprintf("%s://%s%s", u.Scheme, host, u.RequestURI())
 	}
 
 	return inputURL, nil

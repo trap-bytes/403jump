@@ -8,12 +8,14 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"sync/atomic"
+	"time"
 
 	"github.com/trap-bytes/403jump/module"
 	"github.com/trap-bytes/403jump/utils"
 )
 
-func CreateHTTPClientWProxy(proxy string) (*http.Client, error) {
+func CreateHTTPClientWProxy(proxy string, timeout int) (*http.Client, error) {
 	parts := strings.Split(proxy, ":")
 	proxyIP := parts[0]
 	proxyPortStr := parts[1]
@@ -22,7 +24,9 @@ func CreateHTTPClientWProxy(proxy string) (*http.Client, error) {
 		return nil, fmt.Errorf("Error converting proxy port to integer: %v\n", err)
 	}
 
-	client := &http.Client{}
+	client := &http.Client{
+		Timeout: time.Duration(timeout) * time.Second,
+	}
 	if proxyIP != "" && proxyPort != 0 {
 		proxyURL, err := url.Parse(fmt.Sprintf("http://%s:%d", proxyIP, proxyPort))
 		if err != nil {
@@ -46,20 +50,20 @@ func ProcessSingleTarget(client *http.Client, url, cookie, header string) {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		bypassFound += module.HttpRequestWithVerbs(client, url, cookie, header)
+		atomic.AddInt64(&bypassFound, module.HttpRequestWithVerbs(client, url, cookie, header))
 	}()
 
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		bypassFound += module.HttpRequestWithHeaders(client, url, cookie, header)
+		atomic.AddInt64(&bypassFound, module.HttpRequestWithHeaders(client, url, cookie, header))
 	}()
 
 	if utils.HasPath(url) {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			bypassFound += module.HttpRequestPathFuzzing(client, url, cookie, header)
+			atomic.AddInt64(&bypassFound, module.HttpRequestPathFuzzing(client, url, cookie, header))
 		}()
 	}
 

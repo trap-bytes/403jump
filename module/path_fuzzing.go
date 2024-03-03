@@ -2,6 +2,7 @@ package module
 
 import (
 	"fmt"
+	"net"
 	"net/http"
 	"net/url"
 	"strings"
@@ -9,8 +10,8 @@ import (
 	"github.com/trap-bytes/403jump/utils"
 )
 
-func HttpRequestPathFuzzing(client *http.Client, inputURL, cookie, customHeader string) int {
-	bypass := 0
+func HttpRequestPathFuzzing(client *http.Client, inputURL, cookie, customHeader string) int64 {
+	bypass := int64(0)
 
 	parsedURL, err := url.Parse(inputURL)
 	if err != nil {
@@ -43,8 +44,13 @@ func HttpRequestPathFuzzing(client *http.Client, inputURL, cookie, customHeader 
 
 		resp, err := client.Do(req)
 		if err != nil {
-			fmt.Printf("Error performing request for %s with %s path: %v\n", inputURL, path, err)
-			return 0
+			if netErr, ok := err.(net.Error); ok && netErr.Timeout() {
+				fmt.Printf("Timeout error: Request for %s with %s path took too long to complete.\n", inputURL, path)
+				continue
+			} else {
+				fmt.Printf("Error performing request for %s with %s path: %v\n", inputURL, path, err)
+				return 0
+			}
 		}
 		defer resp.Body.Close()
 
