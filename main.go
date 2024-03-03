@@ -45,7 +45,7 @@ func main() {
 		fmt.Println("  -p string    Specify the proxy URL (e.g., 127.0.0.1:8080)")
 		fmt.Println("  -c string    Specify cookies (e.g., user_token=g3p21ip21h; ")
 		fmt.Println("  -r string    Specify headers (e.g., Myheader: test")
-		fmt.Println("  -timeout		Specify connection timeout")
+		fmt.Println("  -timeout     Specify connection timeout in seconds")
 		fmt.Println("  -h           Display help")
 
 		fmt.Println("\nExamples:")
