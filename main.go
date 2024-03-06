@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/trap-bytes/403jump/handler"
 	"github.com/trap-bytes/403jump/utils"
 )
 
@@ -68,7 +69,7 @@ func main() {
 	if len(proxy) > 0 {
 		if utils.IsValidProxy(proxy) {
 			fmt.Println("Using proxy:", proxy)
-			client, err = CreateHTTPClientWProxy(proxy, timeout)
+			client, err = handler.CreateHTTPClientWProxy(proxy, timeout)
 			if err != nil {
 				fmt.Println(err)
 				return
@@ -90,10 +91,10 @@ func main() {
 			fmt.Printf("Error: %v\n\n", err)
 			return
 		} else {
-			ProcessSingleTarget(client, urlFlag, cookie, header)
+			handler.ProcessSingleTarget(client, urlFlag, cookie, header)
 		}
 	} else {
-		ProcessMultipleTargets(client, fileFlag, cookie, header)
+		handler.ProcessMultipleTargets(client, fileFlag, cookie, header)
 	}
 
 	if bypassFound > 0 {

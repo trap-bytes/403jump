@@ -1,4 +1,4 @@
-package main
+package handler
 
 import (
 	"crypto/tls"
@@ -14,6 +14,8 @@ import (
 	"github.com/trap-bytes/403jump/module"
 	"github.com/trap-bytes/403jump/utils"
 )
+
+var BypassFound int64
 
 func CreateHTTPClientWProxy(proxy string, timeout int) (*http.Client, error) {
 	parts := strings.Split(proxy, ":")
@@ -50,20 +52,20 @@ func ProcessSingleTarget(client *http.Client, url, cookie, header string) {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		atomic.AddInt64(&bypassFound, module.HttpRequestWithVerbs(client, url, cookie, header))
+		atomic.AddInt64(&BypassFound, module.HttpRequestWithVerbs(client, url, cookie, header))
 	}()
 
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		atomic.AddInt64(&bypassFound, module.HttpRequestWithHeaders(client, url, cookie, header))
+		atomic.AddInt64(&BypassFound, module.HttpRequestWithHeaders(client, url, cookie, header))
 	}()
 
 	if utils.HasPath(url) {
 		wg.Add(1)
 		go func() {
 			defer wg.Done()
-			atomic.AddInt64(&bypassFound, module.HttpRequestPathFuzzing(client, url, cookie, header))
+			atomic.AddInt64(&BypassFound, module.HttpRequestPathFuzzing(client, url, cookie, header))
 		}()
 	}
 
