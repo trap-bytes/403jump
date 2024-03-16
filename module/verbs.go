@@ -53,6 +53,5 @@ func HttpRequestWithVerbs(client *http.Client, url, cookie, customHeader string)
 			bypass++
 		}
 	}
-	fmt.Print("gia torno")
 	return bypass
 }
